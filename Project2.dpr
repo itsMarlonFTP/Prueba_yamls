@@ -23,6 +23,7 @@ var
   results: IRunResults;
   logger: ITestLogger;
   nunitLogger : ITestLogger;
+  runId: TGUID;
 {$ENDIF}
 begin
 {$IFDEF TESTINSIGHT}
@@ -50,6 +51,9 @@ begin
     runner.AddLogger(nunitLogger);
 
     //Run tests
+    if CreateGUID(runId) <> 0 then
+      raise Exception.Create('No se pudo generar el ID de ejecución de DUnitX.');
+    System.Writeln('DUNITX_EXECUTION_ID=' + GUIDToString(runId));
     results := runner.Execute;
     if not results.AllPassed then
       System.ExitCode := EXIT_ERRORS;
