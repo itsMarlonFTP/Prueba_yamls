@@ -3,12 +3,19 @@ name: Pruebas Delphi + Sonar
 
 on:
   push:
-    branches: [ "main", "develop", "staging*", "hotfix*", "bug-fix*" ]
+    branches:
+      - main
+      - develop
+      - 'staging*'
+      - 'hotfix*'
+      - 'bug-fix*'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
+
   # Job 1: Runner propio (necesita Delphi instalado)
   pruebas:
     runs-on: [self-hosted, windows]
@@ -37,23 +44,39 @@ jobs:
 
   # Job 2: Runner de GitHub (no necesita Delphi)
   sonar:
-    if: always()
+    needs: pruebas
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
+      - name: Descargar código
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Descargar resultados de pruebas
+        uses: actions/download-artifact@v4
+        with:
+          name: resultados-pruebas
+          path: .
+
+      - name: Verificar resultados
+        shell: pwsh
+        run: |
+          if (Test-Path "TestResults.xml") {
+            Write-Host "Reporte de pruebas encontrado."
+          } else {
+            Write-Error "No se encontró TestResults.xml"
+            exit 1
+          }
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v8.5.1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_REGION: us
         with:
           args: >
             -Dsonar.organization=devsecops-axity
             -Dsonar.projectKey=delphi-unittest
             -Dsonar.sources=.
             -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.region=us
