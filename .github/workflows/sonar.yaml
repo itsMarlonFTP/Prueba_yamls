@@ -1,0 +1,40 @@
+name: Delphi-install-test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  install-delphi:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Descargar instalador de Delphi
+        shell: powershell
+        env:
+          DELPHI_INSTALLER_URL: ${{ secrets.DELPHI_INSTALLER_URL }}
+        run: Invoke-WebRequest -Uri $env:DELPHI_INSTALLER_URL -OutFile setup.exe
+
+      - name: Preparar licencia
+        shell: powershell
+        env:
+          DELPHI_SLIP_B64: ${{ secrets.DELPHI_SLIP_B64 }}
+        run: |
+          [IO.File]::WriteAllBytes("$PWD\license.slip", [Convert]::FromBase64String($env:DELPHI_SLIP_B64))
+
+      - name: Instalar Delphi (silencioso)
+        shell: cmd
+        run: echo Y| setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SLIPFILE="%CD%\license.slip" /FEATURES=delphi_windows /LOG="%CD%\install.log"
+
+      - name: Verificar instalación
+        shell: cmd
+        run: |
+          dir "C:\Program Files (x86)\Embarcadero\Studio"
+          dir "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\dcc32.exe"
+
+      - name: Subir log de instalación
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: install-log
+          path: install.log
+          if-no-files-found: warn
