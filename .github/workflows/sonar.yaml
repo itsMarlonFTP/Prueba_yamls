@@ -47,8 +47,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=xxxxxxxxx
-            -Dsonar.projectKey=xxxxxxxxxx
+            -Dsonar.organization=devsecops-axity
+            -Dsonar.projectKey=delphi-unittest
             -Dsonar.sources=.
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.region=us
