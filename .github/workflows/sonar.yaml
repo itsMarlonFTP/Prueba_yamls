@@ -2,21 +2,18 @@ name: Pruebas Delphi + Sonar
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop", "staging*", "hotfix*", "bug-fix*" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  pruebas-y-sonar:
-    # Runner propio con RAD Studio instalado
+  # Job 1: tu PC (necesita Delphi instalado)
+  pruebas:
     runs-on: [self-hosted, windows]
-
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Compilar proyecto
         shell: cmd
@@ -35,15 +32,23 @@ jobs:
           name: resultados-pruebas
           path: TestResults.xml
 
+  # Job 2: runner de GitHub (no necesita Delphi)
+  sonar:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: SonarQube Scan
-        if: ${{ !cancelled() }}
         uses: SonarSource/sonarqube-scan-action@v8.5.1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=devsecops-axity
-            -Dsonar.projectKey=delphi-unittest
+            -Dsonar.organization=xxxxxxxxx
+            -Dsonar.projectKey=xxxxxxxxxx
             -Dsonar.sources=.
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.region=us
