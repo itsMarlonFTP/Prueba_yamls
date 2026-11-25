@@ -1,3 +1,4 @@
+
 name: Pruebas Delphi + Sonar
 
 on:
@@ -8,9 +9,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Job 1: tu PC (necesita Delphi instalado)
+  # Job 1: Runner propio (necesita Delphi instalado)
   pruebas:
     runs-on: [self-hosted, windows]
+
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -19,7 +21,7 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\rsvars.bat"
-          msbuild Project2.dproj /t:Build /p:Config=Debug /p:Platform=Win32 /p:DCC_Define="CI"
+          msbuild Project2.dproj /t:Build /p:Config=Debug /p:Platform=Win32 "/p:DCC_Define=CI"
 
       - name: Ejecutar pruebas
         shell: cmd
@@ -31,10 +33,13 @@ jobs:
         with:
           name: resultados-pruebas
           path: TestResults.xml
+          if-no-files-found: warn
 
-  # Job 2: runner de GitHub (no necesita Delphi)
+  # Job 2: Runner de GitHub (no necesita Delphi)
   sonar:
+    if: always()
     runs-on: windows-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
