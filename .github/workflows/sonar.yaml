@@ -1,19 +1,22 @@
-name: Pruebas Delphi (DUnitX)
+name: Pruebas Delphi + Sonar
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  pruebas:
-    # Runner propio con RAD Studio instalado (los de GitHub no traen Delphi)
+  pruebas-y-sonar:
+    # Runner propio con RAD Studio instalado
     runs-on: [self-hosted, windows]
 
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Compilar proyecto
         shell: cmd
@@ -31,3 +34,16 @@ jobs:
         with:
           name: resultados-pruebas
           path: TestResults.xml
+
+      - name: SonarQube Scan
+        if: ${{ !cancelled() }}
+        uses: SonarSource/sonarqube-scan-action@v8.5.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=devsecops-axity
+            -Dsonar.projectKey=delphi-unittest
+            -Dsonar.sources=.
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.region=us
