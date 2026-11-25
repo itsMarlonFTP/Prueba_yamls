@@ -1,40 +1,33 @@
-name: Delphi-install-test
+name: Pruebas Delphi (DUnitX)
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  install-delphi:
-    runs-on: windows-latest
-    timeout-minutes: 60
+  pruebas:
+    # Runner propio con RAD Studio instalado (los de GitHub no traen Delphi)
+    runs-on: [self-hosted, windows]
+
     steps:
-      - name: Descargar instalador de Delphi
-        shell: powershell
-        env:
-          DELPHI_INSTALLER_URL: ${{ secrets.DELPHI_INSTALLER_URL }}
-        run: Invoke-WebRequest -Uri $env:DELPHI_INSTALLER_URL -OutFile setup.exe
+      - name: Descargar código
+        uses: actions/checkout@v4
 
-      - name: Preparar licencia
-        shell: powershell
-        env:
-          DELPHI_SLIP_B64: ${{ secrets.DELPHI_SLIP_B64 }}
-        run: |
-          [IO.File]::WriteAllBytes("$PWD\license.slip", [Convert]::FromBase64String($env:DELPHI_SLIP_B64))
-
-      - name: Instalar Delphi (silencioso)
-        shell: cmd
-        run: echo Y| setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SLIPFILE="%CD%\license.slip" /FEATURES=delphi_windows /LOG="%CD%\install.log"
-
-      - name: Verificar instalación
+      - name: Compilar proyecto
         shell: cmd
         run: |
-          dir "C:\Program Files (x86)\Embarcadero\Studio"
-          dir "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\dcc32.exe"
+          call "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\rsvars.bat"
+          msbuild Project2.dproj /t:Build /p:Config=Debug /p:Platform=Win32 /p:DCC_Define="CI"
 
-      - name: Subir log de instalación
+      - name: Ejecutar pruebas
+        shell: cmd
+        run: Win32\Debug\Project2.exe --exitbehavior:Continue --xmlfile:TestResults.xml
+
+      - name: Guardar resultados
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: install-log
-          path: install.log
-          if-no-files-found: warn
+          name: resultados-pruebas
+          path: TestResults.xml

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2026/11/25 10:23:46.000.279,=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2026/11/25 10:26:58.000.408,=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Unit4.pas</Transaction>
+    <Transaction>2026/11/25 10:27:14.000.622,C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Test.Calculadora.pas=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Unit4.pas</Transaction>
+    <Transaction>2026/11/25 10:27:29.000.158,C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Calculadora.pas=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Test.Calculadora.pas</Transaction>
+    <Transaction>2026/11/25 10:28:08.000.898,=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Unit4.pas</Transaction>
+    <Transaction>2026/11/25 10:28:22.000.781,C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Test.Calculadora.pas=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Unit4.pas</Transaction>
+    <Transaction>2026/11/25 10:30:29.000.080,C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Project2.dproj=C:\Users\Marlon.Carvallo\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
