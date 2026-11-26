@@ -1,4 +1,3 @@
-
 name: Pruebas Delphi + Sonar
 
 on:
@@ -28,55 +27,26 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\rsvars.bat"
-          msbuild Project2.dproj /t:Build /p:Config=Debug /p:Platform=Win32 "/p:DCC_Define=CI"
+          msbuild Project2.dproj /t:Build /p:Config=Debug /p:Platform=Win32 "/p:DCC_Define=CI" /p:DCC_MapFile=3
 
       - name: Ejecutar pruebas
         shell: cmd
         run: Win32\Debug\Project2.exe --exitbehavior:Continue --xmlfile:TestResults.xml
+
+      - name: Generar coverage
+        # Si falla, el workflow continúa sin coverage
+        # continue-on-error: true     LUEGO LO TENGO QUE REACTIVAR
+        shell: cmd
+        run: |
+          if not exist coverage mkdir coverage
+          C:\Tools\CodeCoverage\CodeCoverage.exe -e Win32\Debug\Project2.exe -m Win32\Debug\Project2.map -u Calculadora -sp . -od coverage -xml -xmllines -html -a --exitbehavior:Continue
 
       - name: Guardar resultados
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: resultados-pruebas
-          path: TestResults.xml
+          path: |
+            TestResults.xml
+            coverage/
           if-no-files-found: warn
-
-  # Job 2: Runner de GitHub (no necesita Delphi)
-  sonar:
-    needs: pruebas
-    runs-on: windows-latest
-
-    steps:
-      - name: Descargar código
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Descargar resultados de pruebas
-        uses: actions/download-artifact@v4
-        with:
-          name: resultados-pruebas
-          path: .
-
-      - name: Verificar resultados
-        shell: pwsh
-        run: |
-          if (Test-Path "TestResults.xml") {
-            Write-Host "Reporte de pruebas encontrado."
-          } else {
-            Write-Error "No se encontró TestResults.xml"
-            exit 1
-          }
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v8.5.1
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_REGION: us
-        with:
-          args: >
-            -Dsonar.organization=devsecops-axity
-            -Dsonar.projectKey=delphi-unittest
-            -Dsonar.sources=.
-            -Dsonar.sourceEncoding=UTF-8
