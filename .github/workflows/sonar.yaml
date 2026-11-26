@@ -63,3 +63,5 @@ jobs:
             TestResults.xml
             coverage/
           if-no-files-found: warn
+
+  # Job 2 temporalmente desactivado para revisar los reportes generados.
