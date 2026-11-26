@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<test-results name="C:\Users\Marlon.Carvallo\Documents\GitHub\Prueba_yamls\Win32\Debug\Project2.exe" total="11" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2026-11-26" time="08:45:36">
+  <culture-info current-culture="en" current-uiculture="en" />
+  <test-suite type="Assembly" name="Project2.exe" executed="true" result="Success" success="True" time="0.008" asserts="0">
+    <results>
+        <test-suite type="Namespace" name="Test" executed="true" result="Success" success="True" time="0.008" asserts="0" >
+          <results>
+              <test-suite type="Fixture" name="TTestCalculadora" executed="True" result="Success" success="True" time="0.007" >
+                <results>
+                  <test-case name="Sumar_DosPositivos_RetornaSuma" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Sumar_VariosCasos.Positivos" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Sumar_VariosCasos.Negativos" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Sumar_VariosCasos.Con cero" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Restar_DosNumeros_RetornaDiferencia" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Multiplicar_PorCero_RetornaCero" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Dividir_DosNumeros_RetornaCociente" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="Dividir_EntreCero_LanzaExcepcion" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="EsPar_VariosCasos.Par" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="EsPar_VariosCasos.Impar" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="EsPar_VariosCasos.Cero" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                </results>
+              </test-suite>
+          </results>
+        </test-suite>
+    </results>
+  </test-suite>
+</test-results>

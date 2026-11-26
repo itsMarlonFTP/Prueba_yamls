@@ -1,0 +1,11 @@
+Will track coverage for: Calculadora
+Trying to start Win32\Debug\Project2.exe with the Parameters :
+Started successfully
+Create Process:1384 name:Win32\Debug\Project2.exe
+Adding breakpoints for module:Win32\Debug\Project2.exe
+Module name "DUnitX.InternalDataProvider" did not match module from address name "DUnitX.Attributes" at address:001EEC77
+Module name "DUnitX.Loggers.Null" did not match module from address name "DUnitX.Utils.XML" at address:002625DA
+Setting BreakPoint for module: Calculadora unit Calculadora.pas moduleName: Calculadora unitModuleName: Calculadora addr:69 VA:00264F7C Base:3670016 Address: 005E5F7C
+Adding breakpoint for Calculadora.TCalculadora.Sumar in Calculadora.pas
+Creating class info for Calculadora class TCalculadora
+TBreakPoint.Activate:
