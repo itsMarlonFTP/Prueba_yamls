@@ -28,18 +28,31 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\rsvars.bat"
           msbuild Project2.dproj /t:Build /p:Config=Debug /p:Platform=Win32 "/p:DCC_Define=CI" /p:DCC_MapFile=3
+          if errorlevel 1 exit /b 1
+          if not exist "Win32\Debug\Project2.map" (
+            echo ERROR: No se genero Win32\Debug\Project2.map
+            exit /b 1
+          )
 
       - name: Ejecutar pruebas
         shell: cmd
         run: Win32\Debug\Project2.exe --exitbehavior:Continue --xmlfile:TestResults.xml
 
       - name: Generar coverage
-        # Si falla, el workflow continúa sin coverage
         # continue-on-error: true     LUEGO LO TENGO QUE REACTIVAR
         shell: cmd
         run: |
+          if not exist "Win32\Debug\Project2.map" (
+            echo ERROR: Falta Win32\Debug\Project2.map
+            exit /b 1
+          )
           if not exist coverage mkdir coverage
-          C:\Tools\CodeCoverage\CodeCoverage.exe -e Win32\Debug\Project2.exe -m Win32\Debug\Project2.map -u Calculadora -sp . -od coverage -xml -xmllines -html -a --exitbehavior:Continue
+          C:\Tools\CodeCoverage\CodeCoverage.exe -e Win32\Debug\Project2.exe -m Win32\Debug\Project2.map -u Calculadora -sp . -od coverage -xml -xmllines -html
+          if errorlevel 1 exit /b 1
+          if not exist "coverage\CodeCoverage_Summary.xml" (
+            echo ERROR: DelphiCodeCoverage no genero coverage\CodeCoverage_Summary.xml
+            exit /b 1
+          )
 
       - name: Guardar resultados
         if: always()
