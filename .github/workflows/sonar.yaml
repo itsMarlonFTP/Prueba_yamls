@@ -47,8 +47,13 @@ jobs:
             exit /b 1
           )
           if not exist coverage mkdir coverage
-          C:\Tools\CodeCoverage\CodeCoverage.exe -e Win32\Debug\Project2.exe -m Win32\Debug\Project2.map -u Calculadora -sp . -od coverage -xml -xmllines -html
-          if errorlevel 1 exit /b 1
+          if exist "coverage\CodeCoverage_Summary.xml" del /q "coverage\CodeCoverage_Summary.xml"
+          dir /T:W "Win32\Debug\Project2.exe" "Win32\Debug\Project2.map"
+          C:\Tools\CodeCoverage\CodeCoverage.exe -e Win32\Debug\Project2.exe -m Win32\Debug\Project2.map -u Calculadora -sp . -od coverage -xml -xmllines -html -v -lt coverage\Delphi-Code-Coverage.log
+          set "COVERAGE_EXIT=%ERRORLEVEL%"
+          echo DelphiCodeCoverage exit code: %COVERAGE_EXIT%
+          if exist coverage dir /s /b coverage
+          if not "%COVERAGE_EXIT%"=="0" exit /b %COVERAGE_EXIT%
           if not exist "coverage\CodeCoverage_Summary.xml" (
             echo ERROR: DelphiCodeCoverage no genero coverage\CodeCoverage_Summary.xml
             exit /b 1
